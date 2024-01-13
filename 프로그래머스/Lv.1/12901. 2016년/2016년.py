@@ -1,6 +1,4 @@
-import datetime
-
 def solution(a, b):
-    dt = datetime.datetime(2016, a, b)
-    weekday = dt.weekday()
-    return ["MON","TUE","WED","THU","FRI","SAT", "SUN"][weekday]
+    month = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    day = ['THU', 'FRI', 'SAT', 'SUN', 'MON', 'TUE', 'WED']
+    return day[(sum(month[:a-1])+b)%7]
