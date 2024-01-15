@@ -8,6 +8,9 @@ def solution(number, limit, power):
                 hap += 1
             elif i % j == 0:
                 hap += 2
+            if hap > limit:
+                break
+                
         if hap > limit:
             steel += power
         else: steel += hap
