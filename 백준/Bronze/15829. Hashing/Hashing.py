@@ -10,4 +10,4 @@ SUM = 0
 for idx, num in enumerate(s):
     SUM += alp[num] * 31**idx
 
-print(SUM)
+print(SUM%1234567891)
