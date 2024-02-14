@@ -5,12 +5,11 @@ def solution(s):
             stack.append('(')
         if i == ')':
             if stack and stack[-1] == '(':
-                stack.pop(-1)
+                stack.pop()
             else: 
                 return False
-    if stack:
-        return False
-    
-    return True
+            
+    return len(stack) == 0
+
                 
         
