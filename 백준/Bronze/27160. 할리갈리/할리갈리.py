@@ -7,12 +7,9 @@ for i in range(a):
     else:
         HG[inp[0]] = (int(inp[1]))
 
-flag = 0
 for i in HG:
     if HG[i] == 5:
-        flag = 1
-        
-if flag == 1:
-    print('YES')
-else:
-    print('NO')
+        print('YES')
+        exit()
+
+print('NO')
