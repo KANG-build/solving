@@ -2,6 +2,9 @@
 # 1654. 랜선 자르기 #
 #####################
 
+import sys
+input = sys.stdin.readline
+
 # 남는 길이가 mid * m이면 된다
 n, m = map(int, input().split())
 array = []
