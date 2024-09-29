@@ -15,7 +15,8 @@ def check_win(board, player):
             return i[1]
     return
 
-
+import sys
+input = sys.stdin.readline
 
 k = int(input())
 for i in range(k):
