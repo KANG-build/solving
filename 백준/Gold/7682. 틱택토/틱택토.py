@@ -1,3 +1,6 @@
+import sys
+input = sys.stdin.readline
+
 # 1차원 리스트에서 동일한 문자가 수직선이나 수평선, 대각선으로 나타나면
 # 승리한 것으로 한다.
 def check_win(board, player):
