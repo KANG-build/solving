@@ -1,6 +1,7 @@
 import sys
 import math
 sys.setrecursionlimit(100000000)
+input = sys.stdin.readline 
 
 # 중간점
 def Mid(x1, y1, x2, y2):
@@ -8,7 +9,7 @@ def Mid(x1, y1, x2, y2):
     return (x1+(x2-x1)//2, y1+(y2-y1)//2)
     
 # 사분면 구분
-def point(a, b, x, y): 
+def Point(a, b, x, y): 
     if a <= x and b <= y:
         return 1
     elif  a > x and b <= y:
@@ -33,35 +34,37 @@ def tro(x1, y1, a, b, x2, y2):
     mid = Mid(x1, y1, x2, y2)
 	# 칸 채움 (사분면 검사 함)
     count += 1
-    if point(a, b, mid[0], mid[1]) == 1:
+    point = Point(a, b, mid[0], mid[1])
+    
+    if point == 1:
         board[mid[1]+1][mid[0]] = count
         board[mid[1]][mid[0]+1] = count
         board[mid[1]+1][mid[0]+1] = count
-    elif point(a, b, mid[0], mid[1]) == 2:
+    elif point == 2:
         board[mid[1]][mid[0]] = count
         board[mid[1]+1][mid[0]] = count
         board[mid[1]+1][mid[0]+1] = count
-    elif point(a, b, mid[0], mid[1]) == 3:
+    elif point == 3:
         board[mid[1]][mid[0]] = count
         board[mid[1]][mid[0]+1] = count
         board[mid[1]+1][mid[0]+1] = count
-    elif point(a, b, mid[0], mid[1]) == 4:
+    elif point == 4:
         board[mid[1]][mid[0]] = count
         board[mid[1]+1][mid[0]] = count
         board[mid[1]][mid[0]+1] = count
                
     # 재귀적으로 각 사분면을 나누어 타일 배치
-    tro(x1, y1, a if point(a, b, mid[0], mid[1]) == 1 else mid[0], 
-        b if point(a, b, mid[0], mid[1]) == 1 else mid[1], mid[0], mid[1])
+    tro(x1, y1, a if point == 1 else mid[0], 
+        b if point == 1 else mid[1], mid[0], mid[1])
     
-    tro(mid[0] + 1, y1, a if point(a, b, mid[0], mid[1]) == 2 else mid[0] + 1, 
-        b if point(a, b, mid[0], mid[1]) == 2 else mid[1], x2, mid[1])
+    tro(mid[0] + 1, y1, a if point == 2 else mid[0] + 1, 
+        b if point == 2 else mid[1], x2, mid[1])
 
-    tro(x1, mid[1] + 1, a if point(a, b, mid[0], mid[1]) == 3 else mid[0], 
-        b if point(a, b, mid[0], mid[1]) == 3 else mid[1] + 1, mid[0], y2)
+    tro(x1, mid[1] + 1, a if point == 3 else mid[0], 
+        b if point == 3 else mid[1] + 1, mid[0], y2)
 
-    tro(mid[0] + 1, mid[1] + 1, a if point(a, b, mid[0], mid[1]) == 4 else mid[0] + 1, 
-        b if point(a, b, mid[0], mid[1]) == 4 else mid[1] + 1, x2, y2)
+    tro(mid[0] + 1, mid[1] + 1, a if point == 4 else mid[0] + 1, 
+        b if point == 4 else mid[1] + 1, x2, y2)
 
 n = int(input())
 board = [[0] * 2**n for _ in range(2**n)]
