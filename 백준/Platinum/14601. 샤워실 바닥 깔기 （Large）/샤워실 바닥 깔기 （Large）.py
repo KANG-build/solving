@@ -1,81 +1,94 @@
 import sys
-import math
-sys.setrecursionlimit(100000000)
-input = sys.stdin.readline 
+input = sys.stdin.readline
 
-# 중간점
-def Mid(x1, y1, x2, y2):
-	# 끝점으로 중간점 구하기
-    return (x1+(x2-x1)//2, y1+(y2-y1)//2)
-    
-# 사분면 구분
-def Point(a, b, x, y): 
-    if a <= x and b <= y:
-        return 1
-    elif  a > x and b <= y:
-        return 2
-    elif a <= x and b > y:
-        return 3
-    elif a > x and b > y:
-        return 4
-        
-# 중간점이랑 사분면 구해서 어쩌구함
-def tro(x1, y1, a, b, x2, y2):
-    global count
-        
-    if x2 - x1 == 1 and y2 - y1 == 1:
-        count += 1
-        for i in range(x1, x2 + 1):
-            for j in range(y1, y2 + 1):
-                if board[j][i] == 0:  # 배수구가 아닌 곳에만 타일을 채움
-                    board[j][i] = count
+# 트로미노 함수
+# board : 이차원 리스트
+# start_row, start_col : 현재 분할의 시작 좌표
+# size : 현재 분할의 크기
+# empty_row, empty_col : 비어 있는 곳의 좌표
+
+
+def tromino(board, start_row, start_col, size, empty_row, empty_col):
+    if size == 1:
         return
-    
-    mid = Mid(x1, y1, x2, y2)
-	# 칸 채움 (사분면 검사 함)
-    count += 1
-    point = Point(a, b, mid[0], mid[1])
-    
-    if point == 1:
-        board[mid[1]+1][mid[0]] = count
-        board[mid[1]][mid[0]+1] = count
-        board[mid[1]+1][mid[0]+1] = count
-    elif point == 2:
-        board[mid[1]][mid[0]] = count
-        board[mid[1]+1][mid[0]] = count
-        board[mid[1]+1][mid[0]+1] = count
-    elif point == 3:
-        board[mid[1]][mid[0]] = count
-        board[mid[1]][mid[0]+1] = count
-        board[mid[1]+1][mid[0]+1] = count
-    elif point == 4:
-        board[mid[1]][mid[0]] = count
-        board[mid[1]+1][mid[0]] = count
-        board[mid[1]][mid[0]+1] = count
-               
-    # 재귀적으로 각 사분면을 나누어 타일 배치
-    tro(x1, y1, a if point == 1 else mid[0], 
-        b if point == 1 else mid[1], mid[0], mid[1])
-    
-    tro(mid[0] + 1, y1, a if point == 2 else mid[0] + 1, 
-        b if point == 2 else mid[1], x2, mid[1])
+        
+    middle_row = start_row + size // 2 # 중간 row
+    middle_col = start_col + size // 2 # 중간 col
 
-    tro(x1, mid[1] + 1, a if point == 3 else mid[0], 
-        b if point == 3 else mid[1] + 1, mid[0], y2)
+    # 1 : 왼쪽 위
+    # 2 : 왼쪽 아래
+    # 3 : 오른쪽 위
+    # 4 : 오른쪽 아래
+    quad1_row, quad1_col = middle_row - 1, middle_col - 1
+    quad2_row, quad2_col = middle_row - 1, middle_col
+    quad3_row, quad3_col = middle_row, middle_col - 1
+    quad4_row, quad4_col = middle_row, middle_col
 
-    tro(mid[0] + 1, mid[1] + 1, a if point == 4 else mid[0] + 1, 
-        b if point == 4 else mid[1] + 1, x2, y2)
+    # 왼쪽 위에 빈칸 존재
+    if empty_row < middle_row and empty_col < middle_col:
+        fill(board, middle_row, middle_col, 1)
+        quad1_row, quad1_col = empty_row, empty_col
+    # 왼쪽 아래에 빈칸 존재
+    elif (empty_row < middle_row and empty_col >= middle_col):
+        fill(board, middle_row, middle_col, 2)
+        quad2_row, quad2_col = empty_row, empty_col
+    # 오른쪽 위에 빈칸 존재
+    elif (empty_row >= middle_row and empty_col < middle_col):
+        fill(board, middle_row, middle_col, 3)
+        quad3_row, quad3_col = empty_row, empty_col
+    # 오른쪽 아래에 빈칸 존재
+    elif (empty_row >= middle_row and empty_col >= middle_col):
+        fill(board, middle_row, middle_col, 4)
+        quad4_row, quad4_col = empty_row, empty_col
 
-n = int(input())
-board = [[0] * 2**n for _ in range(2**n)]
-a, b = map(int, input().split())
-a -= 1
-b -= 1
-board[b][a] = -1
-count = 0
-    
-tro(0, 0, a, b, 2**n-1, 2**n-1)
-for i in board[::-1]:
-    for j in i:
-        print(j, end=' ')
-    print()
+    # 재귀 호출 : 분할
+    tromino(board, start_row, start_col, size // 2, quad1_row, quad1_col)
+    tromino(board, start_row, middle_col, size // 2, quad2_row, quad2_col)
+    tromino(board, middle_row, start_col, size // 2, quad3_row, quad3_col)
+    tromino(board, middle_row, middle_col, size // 2, quad4_row, quad4_col)
+
+
+
+
+
+
+
+# 각 카운트를 통해 어떤 트로미노가 들어갔는지 기록
+# part : 현재의 사분면
+def fill(board, mrow, mcol, part):
+    global tromino_count
+    tromino_count += 1
+    if (part != 1):
+        board[mrow - 1][mcol - 1] = tromino_count
+    if (part != 2):
+        board[mrow - 1][mcol] = tromino_count
+    if (part != 3):
+        board[mrow][mcol - 1] = tromino_count
+    if (part != 4):
+        board[mrow][mcol] = tromino_count
+
+# 원점을 재정의 
+def XYsetting(x, y):
+    new_x = n - y
+    new_y = x - 1
+    return (new_x, new_y)
+
+# 입력
+k = int(input())
+x, y = map(int, input().split())
+
+# 왼쪽 아래가 (1,1)이므로 변환
+n = 2 ** k
+new_x, new_y = XYsetting(x, y)
+
+# 보드판 생성
+board = [[0] * (2 ** k) for _ in range(2 ** k)]
+board[new_x][new_y] = -1
+
+# 트로미노 함수 실행
+tromino_count = 0
+tromino(board, 0, 0, 2 ** k, new_x, new_y)
+
+# 출력
+for i in board:
+    print(*i)
