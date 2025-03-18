@@ -10,6 +10,3 @@ def solution(s):
                 return False
             
     return len(stack) == 0
-
-                
-        
