@@ -1,6 +1,7 @@
 def solution(a, b):
-    if a>b:
-        return sum(range(b, a+1))
-    elif b>a:
-        return sum(range(a, b+1))
-    else: return a
+    answer = 0
+    M = max(a, b)
+    m = min(a, b)
+    for i in range(m, M+1):
+        answer += i
+    return answer
