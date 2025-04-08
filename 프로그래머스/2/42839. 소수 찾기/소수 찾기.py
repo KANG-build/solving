@@ -8,10 +8,9 @@ def solution(numbers):
         for i in map(int, [''.join(i) for i in permutations(list(numbers), num)]):
             num_list.add(i)
             
+    num_list -= set(range(0, 2))
     # 하나씩 소수 판별해서
     for i in num_list:
-        if i in [0, 1]:
-            continue
         for j in range(2, i):
             if i%j == 0:
                 break
