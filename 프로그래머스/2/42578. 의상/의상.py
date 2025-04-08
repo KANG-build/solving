@@ -1,13 +1,14 @@
 def solution(clothes):
-    answer = 1
-    wear_list = {}
-    for a, b in clothes:
-        if b in wear_list:
-            wear_list[b] += 1
+    # 종류별로 묶기 
+    dic = {}
+    for item, key in clothes:
+        if key not in dic:
+            dic[key] = [item]
         else:
-            wear_list[b] = 1
-        
-    for i in wear_list:
-        answer *= (wear_list[i]+1)
+            dic[key].append(item)
+            
+    answer = 1
+    for i in dic.keys():
+        answer *= (len(dic[i])+1)
         
     return answer-1
